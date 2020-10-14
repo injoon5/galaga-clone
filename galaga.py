@@ -27,7 +27,7 @@ pygame.init()
 pygame.display.set_caption("Galaga")
 screen = pygame.display.set_mode((640, 650))
 
-enermy_image = pygame.image.load("images/enemy.png").convert()
+enermy_image = pygame.image.load("enemy.png").convert()
 
 clock = pygame.time.Clock()
 while 1:
