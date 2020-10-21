@@ -38,6 +38,9 @@ class Forces:
       def draw(self):
             screen.blit(forces_image, (self.x, 574))
 
+            def fire(self):
+                  missiles.append(Missile(self.x+50))
+
 
 class Missile:
       def __init__(self,x):
@@ -95,6 +98,16 @@ while 1:
                   del enermys[i]
                   i-= 1
             i += 1
+
+      i = 0
+      while i < len(missiles):
+            missiles[i].move()
+            missiles[i].draw()
+            if missiles[i].off_screen():
+                  del enermys[i]
+                  i-= 1
+            i += 1
+            
             
 
       pygame.display.update()
