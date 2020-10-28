@@ -62,7 +62,12 @@ class Missile:
             return self.y < -8
       
       def draw(self):
-            pygame.draw.line(screen, (255,0,0),(self.x, self.y), (self.x,self.y+8), 6)
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+
+            
+            pygame.draw.line(screen, (r,g,b),(self.x, self.y), (self.x,self.y+8), 6)
 
       
                   
@@ -149,4 +154,3 @@ while 1:
                         pygame.display.update()
 
       pygame.display.update()
-
