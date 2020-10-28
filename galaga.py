@@ -17,6 +17,10 @@ class Enermy:
             self.x += self.dx
       def draw(self):
             screen.blit(enermy_image, (self.x, self.y))
+            
+      def hit(self,missile):
+            return pygame.Rect((self.x,self.y), (101, 100)).collidepoint(missile.x,missile.y)
+            
       def off_screen(self):
             return self.y > 640
 
@@ -28,6 +32,7 @@ class Enermy:
 class Forces:
       def __init__(self):
             self.x = 320
+            self.y = 574
 
       def move(self):
             if pressed_keys[K_LEFT] and self.x>0:
@@ -36,10 +41,13 @@ class Forces:
                   self.x += 3
 
       def draw(self):
-            screen.blit(forces_image, (self.x, 574))
+            screen.blit(forces_image, (self.x, self.y))
 
-            def fire(self):
-                  missiles.append(Missile(self.x+50))
+      def fire(self):
+            missiles.append(Missile(self.x+50))
+
+      def boom(self,enermy):
+            return (enermy.x+100>forces.x) and (enermy.y+100 > forces.y) and (enermy.x < forces.x+100)
 
 
 class Missile:
@@ -48,12 +56,17 @@ class Missile:
             self.y = 574
 
       def move(self):
-            self.x += 5
+            self.y -= 5
 
       def off_screen(self):
             return self.y < -8
+      
       def draw(self):
-            pygame.draw.line(screen, (255,0,0),(self.x, self.y), (self.x,self.y+8),1)
+            pygame.draw.line(screen, (255,0,0),(self.x, self.y), (self.x,self.y+8), 6)
+
+      
+                  
+            
 enermys = []
 forces = Forces()
 missiles = []
@@ -68,6 +81,8 @@ enermy_image.set_colorkey((0,0,0))
 forces_image = pygame.image.load("forces.png").convert()
 forces_image.set_colorkey((0,0,0))
 
+game_over = pygame.image.load("game-over.png").convert()
+
 last_enermy_spawn_time = 0
 
 clock = pygame.time.Clock()
@@ -77,6 +92,8 @@ while 1:
       for event in pygame.event.get():
             if event.type == pygame.QUIT:
                   sys.exit()
+            if event.type == KEYDOWN and event.key == K_SPACE:
+                  forces.fire()
 
       pressed_keys = pygame.key.get_pressed()
                   
@@ -87,7 +104,8 @@ while 1:
       screen.fill((0, 0, 0))
       forces.move()
       forces.draw()
-      
+
+      # 적군
       i = 0
       while i < len(enermys):
             enermys[i].move()
@@ -99,16 +117,36 @@ while 1:
                   i-= 1
             i += 1
 
+      # 미사일
       i = 0
       while i < len(missiles):
             missiles[i].move()
             missiles[i].draw()
             if missiles[i].off_screen():
-                  del enermys[i]
+                  del missiles[i]
                   i-= 1
             i += 1
             
-            
+      i = 0
+      while i < len(enermys):
+            j = 0
+            while j < len(missiles):
+                  if enermys[i].hit(missiles[j]):
+                        del enermys[i]
+                        del missiles[j]
+                        i -= 1
+                        break
+                  j += 1
+            i+= 1
+
+      for enermy in enermys:
+            if forces.boom(enermy):
+                  screen.blit(game_over, (170, 200))
+                  while 1:
+                        for event in pygame.event.get():
+                              if event.type == QUIT:
+                                    sys.exit()
+                        pygame.display.update()
 
       pygame.display.update()
 
