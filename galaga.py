@@ -1,8 +1,9 @@
 import pygame, sys, random, time
 from pygame.locals import *
 
+points = 0
 
-
+# 적군 class
 class Enermy:
       def __init__(self):
             self.x = random.randint(0, 570)
@@ -28,7 +29,7 @@ class Enermy:
             if self.x>570 or self.x<0:
                   self.dx = -(self.dx)
 
-
+# 아군 class
 class Forces:
       def __init__(self):
             self.x = 320
@@ -49,7 +50,7 @@ class Forces:
       def boom(self,enermy):
             return (enermy.x+100>forces.x) and (enermy.y+100 > forces.y) and (enermy.x < forces.x+100)
 
-
+# 미사일 class
 class Missile:
       def __init__(self,x):
             self.x = x
@@ -71,12 +72,14 @@ class Missile:
 
       
                   
-            
+# class 복제            
 enermys = []
 forces = Forces()
 missiles = []
 
-pygame.init()
+# 온갖 설정
+
+pygame.init()                    
 pygame.display.set_caption("Galaga")
 screen = pygame.display.set_mode((640, 650))
 
@@ -112,7 +115,7 @@ while 1:
 
       # 적군
       i = 0
-      while i < len(enermys):
+      while i < len(enermys):   
             enermys[i].move()
             enermys[i].bounce()
             enermys[i].draw()
@@ -131,22 +134,25 @@ while 1:
                   del missiles[i]
                   i-= 1
             i += 1
-            
+
+      # 충돌시      
       i = 0
-      while i < len(enermys):
+      while i < len(enermys) :     
             j = 0
             while j < len(missiles):
                   if enermys[i].hit(missiles[j]):
                         del enermys[i]
                         del missiles[j]
                         i -= 1
+                        points += 1
                         break
                   j += 1
             i+= 1
-
+      # 끝!!
       for enermy in enermys:
             if forces.boom(enermy):
                   screen.blit(game_over, (170, 200))
+                  print('점수는', points)
                   while 1:
                         for event in pygame.event.get():
                               if event.type == QUIT:
