@@ -7,7 +7,7 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("pygame으로 내가 만드는 게임")
 screen = pygame.display.set_mode((640, 650))
 
-star_img = pygame.image.load("images/star.png").convert()
+star_img = pygame.image.load("star.png").convert()
 
 while True:
     clock.tick(60)
