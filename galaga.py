@@ -5,6 +5,8 @@ points = 0
 mx = 0
 my = 0
 
+gaming = True #게임중인지 여부
+
 # 적군 class
 class Enermy:
       def __init__(self):
@@ -118,6 +120,10 @@ while 1:
                   sys.exit()
             if event.type == KEYDOWN and event.key == K_SPACE:
                   forces.fire()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                  if btn.click():                  # 다시시작버튼
+                        print('ggg')
+                        gaming = True
 
       pressed_keys = pygame.key.get_pressed()
 
@@ -179,17 +185,15 @@ while 1:
                   screen.blit(game_over, (170, 200))
                   screen.blit(restart_btn, (250, 510))
                   print('점수는', points)
-                  while 1:
-                        for event in pygame.event.get():
-                              if event.type == QUIT:
-                                    sys.exit()
-                                    
-                              if event.type == pygame.MOUSEBUTTONDOWN:
-                                    if btn.click():
-                                          import galaga
-                        pygame.display.update()
+                  pygame.display.update()
+                  gaming  = False
+                  break
+                  
                                           
 
 
-
-      pygame.display.update()
+      if gaming:
+            pygame.display.update()
+      else:
+            enermys = []
+            points  = 0
