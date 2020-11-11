@@ -1,6 +1,6 @@
 import pygame
 
-music_file = "sound/mybgm.mp3"
+music_file = "Forget Me Not - Patrick Patrikios.mp3"
 
 pygame.mixer.init()
 
