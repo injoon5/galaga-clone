@@ -2,6 +2,8 @@ import pygame, sys, random, time
 from pygame.locals import *
 
 points = 0
+mx = 0
+my = 0
 
 # 적군 class
 class Enermy:
@@ -70,18 +72,30 @@ class Missile:
             
             pygame.draw.line(screen, (r,g,b),(self.x, self.y), (self.x,self.y+8), 6)
 
-      
+class Button:
+      def __init__(self):
+            self.x = 250
+            self.y = 510
+      def click(self):
+            pos = pygame.mouse.get_pos()
+            mx = pos[0]
+            my = pos[1]
+            return pygame.Rect((self.x,self.y), (150, 100)).collidepoint(mx,my)
+             # 300이 mx 보다 작고, 610이 my보다 크고,      
                   
 # class 복제            
 enermys = []
 forces = Forces()
 missiles = []
+btn = Button()
 
 # 온갖 설정
 
 pygame.init()                    
 pygame.display.set_caption("Galaga")
 screen = pygame.display.set_mode((640, 650))
+
+myfont = pygame.font.Font(None, 50)
 
 enermy_image = pygame.image.load("enemy.png").convert()
 enermy_image.set_colorkey((0,0,0))
@@ -90,6 +104,8 @@ forces_image = pygame.image.load("forces.png").convert()
 forces_image.set_colorkey((0,0,0))
 
 game_over = pygame.image.load("game-over.png").convert()
+
+restart_btn = pygame.image.load("restart.png").convert()
 
 last_enermy_spawn_time = 0
 
@@ -104,6 +120,10 @@ while 1:
                   forces.fire()
 
       pressed_keys = pygame.key.get_pressed()
+
+      pos = pygame.mouse.get_pos()
+      mx = pos[0]
+      my = pos[1]
                   
       if time.time() - last_enermy_spawn_time > 1:
             enermys.append(Enermy())
@@ -148,15 +168,28 @@ while 1:
                         break
                   j += 1
             i+= 1
+
+
+      score_img = myfont.render("Score : " + str(points), True, (255,255,255))
+      screen.blit(score_img , (10, 10))
+
       # 끝!!
       for enermy in enermys:
             if forces.boom(enermy):
                   screen.blit(game_over, (170, 200))
+                  screen.blit(restart_btn, (250, 510))
                   print('점수는', points)
                   while 1:
                         for event in pygame.event.get():
                               if event.type == QUIT:
                                     sys.exit()
+                                    
+                              if event.type == pygame.MOUSEBUTTONDOWN:
+                                    if btn.click():
+                                          import galaga
                         pygame.display.update()
+                                          
+
+
 
       pygame.display.update()
